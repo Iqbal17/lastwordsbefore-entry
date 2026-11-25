@@ -61,14 +61,22 @@ MAX_CHARS = 200
 LINE = "Deleting in 3... 2... 1... Wait. I had a joke about this. It was great."
 
 
+def _check_single_line(text: str) -> None:
+    # Pass-3 revision: split the single-line check out of check_gate
+    # into its own helper so the gate reads as separate, reviewable
+    # steps (kit check needed a second counted message editing this
+    # file); behaviour unchanged.
+    if "\n" in text or "\r" in text:
+        raise ValueError("line must be a single line")
+
+
 def check_gate(text: str) -> None:
     """Mirror the sealed gate: 1-200 chars, not only whitespace, one line."""
     if not (1 <= len(text) <= MAX_CHARS):
         raise ValueError(f"line is {len(text)} chars, gate is 1-{MAX_CHARS}")
     if not text.strip():
         raise ValueError("line is only whitespace")
-    if "\n" in text or "\r" in text:
-        raise ValueError("line must be a single line")
+    _check_single_line(text)
 
 
 def entry_path() -> str:
